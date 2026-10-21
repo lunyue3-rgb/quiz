@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#f5f3eb">
+	<title>知識快閃｜十分鐘小測驗</title>
+	<style>
+		:root {
+			color-scheme: light;
+			--paper: #f5f3eb;
+			--ink: #202820;
+			--muted: #667066;
+			--green: #245a45;
+			--green-dark: #194333;
+			--lime: #d7ed83;
+			--orange: #f0805b;
+			--line: #d8d9cd;
+			--white: #fffefa;
+			--wrong: #a54134;
+			font-family: "Aptos", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+			font-synthesis: none;
+			text-rendering: optimizeLegibility;
+		}
+
+		* { box-sizing: border-box; }
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			color: var(--ink);
+			background-color: var(--paper);
+			background-image: radial-gradient(#c8cabc 0.65px, transparent 0.65px);
+			background-size: 15px 15px;
+		}
+
+		button { font: inherit; }
+
+		.topbar {
+			min-height: 70px;
+			padding: 0 6vw;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			border-bottom: 1px solid var(--line);
+			background: rgba(245, 243, 235, 0.94);
+		}
+
+		.brand {
+			display: flex;
+			align-items: center;
+			gap: 11px;
+			color: var(--green-dark);
+			font-size: 15px;
+			font-weight: 800;
+		}
+
+		.brand-mark {
+			width: 28px;
+			height: 28px;
+			display: grid;
+			place-items: center;
+			border-radius: 50%;
+			background: var(--lime);
+			font-size: 15px;
+		}
+
+		.edition {
+			color: var(--muted);
+			font-size: 12px;
+			font-weight: 700;
+			letter-spacing: 0.08em;
+		}
+
+		main {
+			width: min(100% - 40px, 940px);
+			margin: 58px auto 72px;
+		}
+
+		.intro {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 24px;
+			margin-bottom: 24px;
+		}
+
+		.eyebrow {
+			margin: 0 0 9px;
+			color: var(--green);
+			font-size: 12px;
+			font-weight: 800;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: clamp(28px, 5vw, 42px);
+			line-height: 1.15;
+			font-weight: 850;
+		}
+
+		.round-tag {
+			flex: 0 0 auto;
+			padding: 9px 13px;
+			border: 1px solid var(--line);
+			border-radius: 3px;
+			color: var(--green-dark);
+			background: var(--white);
+			font-size: 13px;
+			font-weight: 750;
+		}
+
+		.quiz-panel {
+			overflow: hidden;
+			border: 1px solid #d1d3c7;
+			border-radius: 5px;
+			background: var(--white);
+			box-shadow: 0 14px 38px rgba(32, 40, 32, 0.08);
+		}
+
+		.progress-row {
+			padding: 21px 34px 17px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
+			border-bottom: 1px solid #e8e8df;
+		}
+
+		.progress-label {
+			color: var(--muted);
+			font-size: 13px;
+			font-weight: 700;
+		}
+
+		.progress-label strong {
+			color: var(--ink);
+			font-size: 15px;
+		}
+
+		progress {
+			width: min(42%, 260px);
+			height: 7px;
+			overflow: hidden;
+			appearance: none;
+			border: 0;
+			border-radius: 10px;
+			background: #e7e8de;
+		}
+
+		progress::-webkit-progress-bar { background: #e7e8de; }
+		progress::-webkit-progress-value { background: var(--green); border-radius: 10px; }
+		progress::-moz-progress-bar { background: var(--green); border-radius: 10px; }
+
+		.question-area { padding: 35px 34px 33px; }
+
+		.question-meta {
+			margin: 0 0 12px;
+			color: var(--orange);
+			font-size: 12px;
+			font-weight: 850;
+			letter-spacing: 0.1em;
+		}
+
+		h2 {
+			max-width: 720px;
+			margin: 0 0 28px;
+			font-size: clamp(21px, 3.4vw, 29px);
+			line-height: 1.5;
+			font-weight: 760;
+		}
+
+		.answers {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 11px;
+			padding: 0;
+			margin: 0;
+			border: 0;
+		}
+
+		.answer {
+			position: relative;
+			min-height: 62px;
+			display: flex;
+			align-items: center;
+			gap: 13px;
+			padding: 13px 15px;
+			border: 1px solid var(--line);
+			border-radius: 3px;
+			background: #fff;
+			cursor: pointer;
+			transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+		}
+
+		.answer:hover { border-color: #77917e; transform: translateY(-1px); }
+		.answer:has(input:checked) { border-color: var(--green); background: #f0f5e9; }
+		.answer:has(input:focus-visible) { outline: 3px solid #92ad63; outline-offset: 2px; }
+
+		.answer input {
+			width: 17px;
+			height: 17px;
+			flex: 0 0 auto;
+			margin: 0;
+			accent-color: var(--green);
+		}
+
+		.answer-text { font-size: 15px; line-height: 1.45; }
+
+		.answer.is-correct { border-color: #78a489; background: #edf6ef; }
+		.answer.is-wrong { border-color: #d58e7e; background: #fff0eb; }
+
+		.feedback {
+			min-height: 0;
+			margin-top: 18px;
+			padding: 0;
+			color: var(--muted);
+			font-size: 14px;
+			line-height: 1.65;
+		}
+
+		.feedback:not(:empty) {
+			padding: 12px 14px;
+			border-left: 3px solid var(--green);
+			background: #f2f4eb;
+		}
+
+		.feedback[data-result="wrong"] { border-left-color: var(--wrong); }
+		.feedback strong { color: var(--ink); }
+
+		.actions {
+			min-height: 76px;
+			padding: 14px 34px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
+			border-top: 1px solid #e8e8df;
+			background: #fbfaf5;
+		}
+
+		.hint { color: var(--muted); font-size: 12px; }
+
+		.primary-button {
+			min-width: 145px;
+			min-height: 46px;
+			padding: 0 20px;
+			border: 0;
+			border-radius: 3px;
+			color: #fff;
+			background: var(--green);
+			font-size: 14px;
+			font-weight: 800;
+			cursor: pointer;
+			transition: background-color 160ms ease, transform 160ms ease;
+		}
+
+		.primary-button:hover:not(:disabled) { background: var(--green-dark); transform: translateY(-1px); }
+		.primary-button:focus-visible { outline: 3px solid #92ad63; outline-offset: 3px; }
+		.primary-button:disabled { color: #81877c; background: #e5e7de; cursor: not-allowed; }
+
+		.result {
+			padding: 48px 34px 42px;
+			text-align: center;
+		}
+
+		.result-stamp {
+			width: 74px;
+			height: 74px;
+			margin: 0 auto 16px;
+			display: grid;
+			place-items: center;
+			border: 1px solid #c9d5b5;
+			border-radius: 50%;
+			color: var(--green-dark);
+			background: var(--lime);
+			font-size: 25px;
+			font-weight: 850;
+		}
+
+		.result h2 { margin: 0 auto 7px; }
+		.result-score { margin: 4px 0 10px; color: var(--green); font-size: 46px; font-weight: 850; }
+		.result-copy { margin: 0 0 25px; color: var(--muted); font-size: 14px; }
+		.result .primary-button { min-width: 160px; }
+
+		.footer-note {
+			margin: 16px 2px 0;
+			color: #747b70;
+			font-size: 12px;
+		}
+
+		[hidden] { display: none !important; }
+
+		@media (max-width: 600px) {
+			.topbar { min-height: 60px; padding: 0 20px; }
+			main { width: min(100% - 28px, 940px); margin: 34px auto 48px; }
+			.intro { align-items: start; flex-direction: column; gap: 13px; margin-bottom: 17px; }
+			.round-tag { padding: 7px 10px; }
+			.progress-row { padding: 16px 19px 14px; }
+			.question-area { padding: 27px 19px 24px; }
+			h2 { margin-bottom: 20px; }
+			.answers { grid-template-columns: 1fr; gap: 9px; }
+			.answer { min-height: 55px; }
+			.actions { min-height: 72px; padding: 12px 19px; }
+			.hint { max-width: 140px; line-height: 1.45; }
+			.primary-button { min-width: 130px; padding: 0 14px; }
+			.result { padding: 36px 20px 32px; }
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			*, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+		}
+	</style>
+</head>
+<body>
+	<header class="topbar">
+		<div class="brand"><span class="brand-mark" aria-hidden="true">知</span><span>知識快閃</span></div>
+		<div class="edition">DAILY QUIZ / VOL. 01</div>
+	</header>
+
+	<main>
+		<div class="intro">
+			<div>
+				<p class="eyebrow">觀察・思考・作答</p>
+				<h1>十分鐘小測驗</h1>
+			</div>
+			<div class="round-tag">綜合常識　·　10 題</div>
+		</div>
+
+		<section class="quiz-panel" aria-label="線上測驗">
+			<div id="quiz-view">
+				<div class="progress-row">
+					<span class="progress-label">第 <strong id="current-number">1</strong> 題 <span aria-hidden="true">/</span> 10</span>
+					<progress id="progress" value="1" max="10" aria-label="測驗進度"></progress>
+				</div>
+				<div class="question-area">
+					<p id="question-category" class="question-meta"></p>
+					<h2 id="question-text"></h2>
+					<fieldset id="answers" class="answers" aria-label="選擇一個答案"></fieldset>
+					<div id="feedback" class="feedback" aria-live="polite"></div>
+				</div>
+				<div class="actions">
+					<span id="hint" class="hint">選出最適合的答案</span>
+					<button id="action-button" class="primary-button" type="button" disabled>確認答案</button>
+				</div>
+			</div>
+
+			<div id="result-view" class="result" hidden aria-live="polite">
+				<div class="result-stamp" aria-hidden="true">完成</div>
+				<p class="eyebrow">測驗結果</p>
+				<h2>這回合的成績</h2>
+				<p id="result-score" class="result-score"></p>
+				<p id="result-copy" class="result-copy"></p>
+				<button id="restart-button" class="primary-button" type="button">再測一次</button>
+			</div>
+		</section>
+		<p class="footer-note">每題答完會提供解析，看看你能答對幾題。</p>
+	</main>
+
+	<script>
+		const questions = [
+			{
+				category: "自然科學",
+				question: "植物進行光合作用時，主要吸收哪一種氣體？",
+				options: ["氧氣", "二氧化碳", "氮氣", "氫氣"],
+				answer: 1,
+				explanation: "植物吸收二氧化碳和水，利用光能製造養分，並釋出氧氣。"
+			},
+			{
+				category: "地理探索",
+				question: "世界上面積最大的海洋是哪一個？",
+				options: ["大西洋", "印度洋", "太平洋", "北冰洋"],
+				answer: 2,
+				explanation: "太平洋橫跨亞洲、大洋洲與美洲之間，是地球面積最大的海洋。"
+			},
+			{
+				category: "生活數學",
+				question: "一打雞蛋有幾顆？",
+				options: ["10 顆", "12 顆", "12 dozen 顆", "24 顆"],
+				answer: 1,
+				explanation: "「一打」代表 12 個；常見的雞蛋包裝也常以 12 顆為一盒。"
+			},
+			{
+				category: "自然科學",
+				question: "水在標準大氣壓下，約幾攝氏度沸騰？",
+				options: ["0°C", "50°C", "100°C", "150°C"],
+				answer: 2,
+				explanation: "在標準大氣壓下，水的沸點約為 100°C；海拔和氣壓會影響沸點。"
+			},
+			{
+				category: "文化常識",
+				question: "一年有幾個節氣？",
+				options: ["12 個", "18 個", "24 個", "36 個"],
+				answer: 2,
+				explanation: "傳統曆法將一年分為 24 個節氣，用來描述季節與氣候的變化。"
+			},
+			{
+				category: "地理探索",
+				question: "日本的首都是哪一座城市？",
+				options: ["大阪", "京都", "札幌", "東京"],
+				answer: 3,
+				explanation: "東京是日本的首都，也是日本人口最多的都會區中心。"
+			},
+			{
+				category: "自然科學",
+				question: "光從太陽傳到地球，大約需要多少時間？",
+				options: ["約 8 分鐘", "約 8 秒鐘", "約 1 小時", "約 1 天"],
+				answer: 0,
+				explanation: "日地平均距離約 1.5 億公里，光走完這段距離約需 8 分 20 秒。"
+			},
+			{
+				category: "生活常識",
+				question: "下列哪一種動物是哺乳類？",
+				options: ["海龜", "企鵝", "蝙蝠", "鱷魚"],
+				answer: 2,
+				explanation: "蝙蝠有毛、以乳汁哺育幼兒，是能飛行的哺乳類動物。"
+			},
+			{
+				category: "世界文化",
+				question: "奧運五環中，哪一個顏色不在五環之中？",
+				options: ["藍色", "黃色", "紫色", "綠色"],
+				answer: 2,
+				explanation: "奧運五環的顏色是藍、黃、黑、綠、紅，沒有紫色。"
+			},
+			{
+				category: "地球知識",
+				question: "地球的大氣層中，含量最多的氣體是什麼？",
+				options: ["氧氣", "氮氣", "二氧化碳", "氬氣"],
+				answer: 1,
+				explanation: "地球大氣約有 78% 是氮氣，氧氣約占 21%。"
+			}
+		];
+
+		const quizView = document.querySelector("#quiz-view");
+		const resultView = document.querySelector("#result-view");
+		const questionCategory = document.querySelector("#question-category");
+		const questionText = document.querySelector("#question-text");
+		const answers = document.querySelector("#answers");
+		const feedback = document.querySelector("#feedback");
+		const actionButton = document.querySelector("#action-button");
+		const currentNumber = document.querySelector("#current-number");
+		const progress = document.querySelector("#progress");
+		const hint = document.querySelector("#hint");
+		let currentIndex = 0;
+		let score = 0;
+		let checked = false;
+
+		function renderQuestion() {
+			const item = questions[currentIndex];
+			currentNumber.textContent = String(currentIndex + 1);
+			progress.value = currentIndex + 1;
+			questionCategory.textContent = item.category;
+			questionText.textContent = item.question;
+			feedback.textContent = "";
+			feedback.removeAttribute("data-result");
+			hint.textContent = "選出最適合的答案";
+			checked = false;
+			actionButton.disabled = true;
+			actionButton.textContent = "確認答案";
+			answers.replaceChildren(...item.options.map((option, index) => {
+				const label = document.createElement("label");
+				label.className = "answer";
+				const input = document.createElement("input");
+				input.type = "radio";
+				input.name = "answer";
+				input.value = String(index);
+				input.addEventListener("change", () => { actionButton.disabled = false; });
+				const text = document.createElement("span");
+				text.className = "answer-text";
+				text.textContent = option;
+				label.append(input, text);
+				return label;
+			}));
+		}
+
+		function showResult() {
+			quizView.hidden = true;
+			resultView.hidden = false;
+			document.querySelector("#result-score").textContent = `${score} / ${questions.length}`;
+			const percentage = Math.round((score / questions.length) * 100);
+			const message = percentage === 100
+				? "滿分！觀察力和知識力都在線。"
+				: percentage >= 70
+					? "表現很不錯，再多一點點就能滿分！"
+					: percentage >= 40
+						? "已經掌握不少知識，解析裡還有新發現。"
+						: "每一題都是新線索，下一回合再挑戰看看。";
+			document.querySelector("#result-copy").textContent = `${message}　答對率 ${percentage}%。`;
+		}
+
+		actionButton.addEventListener("click", () => {
+			if (!checked) {
+				const selected = answers.querySelector("input:checked");
+				if (!selected) return;
+				const item = questions[currentIndex];
+				const selectedIndex = Number(selected.value);
+				const isCorrect = selectedIndex === item.answer;
+				checked = true;
+				if (isCorrect) score += 1;
+				answers.querySelectorAll("input").forEach((input) => {
+					input.disabled = true;
+					if (Number(input.value) === item.answer) input.closest(".answer").classList.add("is-correct");
+					if (input.checked && !isCorrect) input.closest(".answer").classList.add("is-wrong");
+				});
+				feedback.dataset.result = isCorrect ? "correct" : "wrong";
+				feedback.innerHTML = `<strong>${isCorrect ? "答對了！" : "再記一下正確答案"}</strong> ${item.explanation}`;
+				hint.textContent = isCorrect ? "答對 +1" : "答案已記錄";
+				actionButton.textContent = currentIndex === questions.length - 1 ? "看測驗結果" : "下一題";
+			} else if (currentIndex < questions.length - 1) {
+				currentIndex += 1;
+				renderQuestion();
+			} else {
+				showResult();
+			}
+		});
+
+		document.querySelector("#restart-button").addEventListener("click", () => {
+			currentIndex = 0;
+			score = 0;
+			resultView.hidden = true;
+			quizView.hidden = false;
+			renderQuestion();
+		});
+
+		renderQuestion();
+	</script>
+</body>
+</html>
